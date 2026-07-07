@@ -1,0 +1,6 @@
+,ss_det_total_cost,ss_det_total_cost,milp_det_total_cost,milp_det_total_cost,ss_det_fill_rate,ss_det_fill_rate,milp_det_fill_rate,milp_det_fill_rate
+,mean,sum,mean,sum,mean,sum,mean,sum
+store_id,,,,,,,,
+CA_1,69.74,3487.06,55.71,2785.74,1.0,50.0,1.0,50.0
+TX_1,66.47,3323.49,55.46,2773.14,1.0,50.0,1.0,50.0
+WI_1,64.44,3222.19,54.41,2720.6,1.0,50.0,1.0,50.0

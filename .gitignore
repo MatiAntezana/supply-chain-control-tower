@@ -1,0 +1,14 @@
+# Raw M5 data stays local (large, provided out-of-band in m5-forecasting-accuracy/)
+data/raw/
+# Processed artifacts + trained models ARE committed (small, enable CI retrain
+# and the HF Spaces demo without the raw dataset).
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+mlruns/
+mlflow.db
+.DS_Store
+*.egg-info/
+README.hf.md
+docs/pitch.md

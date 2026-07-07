@@ -1,0 +1,30 @@
+# Versioned feature contract — the interface between ingest and forecast.
+# Any change here is a breaking change and must bump `version`.
+# dtypes are pandas dtype *kinds*: i=int, f=float, O=object/str, M=datetime.
+
+version: 1
+keys:
+  item_id: {dtype: O}
+  store_id: {dtype: O}
+  date: {dtype: M}
+target:
+  units: {dtype: i}
+features:
+  # calendar
+  wday: {dtype: i, role: calendar}
+  month: {dtype: i, role: calendar}
+  snap: {dtype: i, role: calendar}
+  is_event: {dtype: i, role: calendar}
+  # price
+  sell_price: {dtype: f, role: price}
+  price_rel: {dtype: f, role: price}   # price / 28d rolling mean price
+  # autoregressive (min lag 28 = horizon -> leak-free direct forecasting)
+  lag_28: {dtype: f, role: lag}
+  lag_35: {dtype: f, role: lag}
+  lag_42: {dtype: f, role: lag}
+  lag_49: {dtype: f, role: lag}
+  rmean_28_7: {dtype: f, role: rolling}    # mean of lag-28 window, 7 days
+  rmean_28_28: {dtype: f, role: rolling}
+  rstd_28_7: {dtype: f, role: rolling}
+  rstd_28_28: {dtype: f, role: rolling}
+categoricals: [item_id, store_id, dept_id]

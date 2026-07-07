@@ -1,0 +1,22 @@
+{
+  "lgbm_quantile": {
+    "pinball_p50": 2.4122,
+    "coverage_p50": 0.506,
+    "pinball_p90": 1.3246,
+    "coverage_p90": 0.9021,
+    "pinball_p95": 0.8434,
+    "coverage_p95": 0.9496,
+    "rmsse_mean": 0.7349,
+    "wrmsse": 0.6687
+  },
+  "seasonal_naive": {
+    "pinball_p50": 2.3944,
+    "coverage_p50": 0.5219,
+    "pinball_p90": 1.5591,
+    "coverage_p90": 0.7987,
+    "pinball_p95": 1.1733,
+    "coverage_p95": 0.8374,
+    "rmsse_mean": 0.7392,
+    "wrmsse": 0.6768
+  }
+}

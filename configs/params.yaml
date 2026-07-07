@@ -1,0 +1,62 @@
+# Global configuration — single source of truth for the whole pipeline.
+# All randomness is controlled by `seed`. All costs/lead-times are SYNTHETIC
+# (M5 has no supplier data) and documented in docs/architecture.md.
+
+seed: 42
+
+data:
+  # Path to the locally-provided M5 dataset (relative to repo root).
+  raw_dir: "../m5-forecasting-accuracy"
+  processed_dir: "data/processed"
+  # Subset for zero-cost local compute: one store per state, top-N items by volume.
+  stores: ["CA_1", "TX_1", "WI_1"]
+  top_n_items: 50
+  # Drop the leading all-zero stretch of each series (pre-launch period).
+  drop_leading_zeros: true
+
+forecast:
+  horizon: 28                # days ahead (M5 standard)
+  quantiles: [0.5, 0.9, 0.95]
+  # Min lag = horizon so one direct model predicts the whole horizon leak-free.
+  lags: [28, 35, 42, 49]
+  rolling_windows: [7, 28]   # applied on top of lag-28
+  backtest:
+    n_folds: 3
+    step_days: 28
+  lgbm:
+    n_estimators: 400
+    learning_rate: 0.05
+    num_leaves: 63
+    min_child_samples: 20
+    subsample: 0.9
+    colsample_bytree: 0.9
+
+inventory:
+  # --- SYNTHETIC economic parameters (documented, seeded, not real company data) ---
+  unit_cost_frac_of_price: 0.70      # COGS as fraction of sell price
+  holding_rate_annual: 0.25          # annual holding cost as fraction of unit cost
+  ordering_cost: 50.0                # fixed cost per purchase order ($)
+  stockout_penalty_frac_of_price: 1.5  # lost margin + goodwill, per lost unit
+  service_level_target: 0.95
+  lead_time:
+    mean_days: 5
+    cv: 0.30                         # coefficient of variation (stochastic supplier)
+    distribution: "gamma"
+  min_order_qty: 10
+  order_multiple: 5
+  # Shared warehouse capacity used only by the MILP (couples SKUs).
+  capacity_units: 20000
+
+simulation:
+  n_replications: 200
+  horizon_days: 28
+  service_levels_sweep: [0.90, 0.92, 0.95, 0.97, 0.99]
+  demand_distribution: "negbin"      # fitted to forecast quantiles; fallback normal
+
+monitoring:
+  drift_share_threshold: 0.30        # retrain if >30% of features drift
+  fill_rate_floor: 0.90              # retrain if simulated fill rate drops below
+
+mlflow:
+  db_file: "mlflow.db"     # sqlite backend, relative to repo root
+  experiment: "sc-control-tower"

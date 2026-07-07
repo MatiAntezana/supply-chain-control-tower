@@ -1,0 +1,24 @@
+=== RETRAIN CYCLE DEMO lunes,  6 de julio de 2026, 23:51:31 -03 ===
+--- 1. drift injected:
+{
+  "feature_contract_version": 1,
+  "drift_share": 0.5,
+  "drifted_columns": 4,
+  "drift_threshold": 0.3,
+  "simulated_fill_rate": 0.9752,
+  "fill_rate_floor": 0.9,
+  "synthetic_drift_injected": true,
+  "retrain_needed": true
+}
+
+--- 2. trigger:
+drift_share=0.5 (threshold 0.3) | simulated_fill_rate=0.9752 (floor 0.9)
+RETRAIN NEEDED
+
+exit code: 1 (1 = retrain fires)
+--- 3. retrain:
+forecast: 4,200 rows, origin=2016-04-24
+
+--- 4. back to healthy monitoring state:
+  "drift_share": 0.25,
+  "retrain_needed": false

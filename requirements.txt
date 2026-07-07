@@ -1,0 +1,22 @@
+# Pinned to the exact versions installed in the `AIEnv` conda env (Python 3.11).
+# Install with: conda run -n AIEnv pip install -r requirements.txt
+pandas==2.3.3
+numpy==2.4.3
+pyarrow==24.0.0
+PyYAML==6.0.3
+scipy==1.17.1
+scikit-learn==1.8.0
+lightgbm==4.6.0
+statsmodels==0.14.6
+PuLP==3.3.2
+simpy==4.1.2
+fastapi==0.136.3
+uvicorn==0.44.0
+pydantic==2.13.0
+httpx==0.28.1
+streamlit==1.57.0
+plotly==5.24.1
+evidently==0.7.21
+mlflow==3.14.0
+pytest==9.0.3
+ruff==0.15.20

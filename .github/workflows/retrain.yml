@@ -1,0 +1,45 @@
+name: Retrain on drift / KPI degradation
+on:
+  schedule:
+    - cron: "0 6 * * 1"      # weekly monitoring check (Mon 06:00 UTC)
+  workflow_dispatch:
+    inputs:
+      inject_drift:
+        description: "Inject synthetic drift (demo of the full cycle)"
+        type: boolean
+        default: false
+
+jobs:
+  monitor-and-retrain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: {python-version: "3.11", cache: pip}
+      - run: pip install -r requirements.txt
+
+      - name: Drift report (Evidently)
+        run: |
+          python -m src.monitor.drift ${{ inputs.inject_drift && '--inject-drift' || '' }}
+
+      - name: Retrain trigger check
+        id: check
+        continue-on-error: true      # exit 1 == retrain needed
+        run: python -m src.monitor.retrain_check
+
+      - name: Retrain forecast + re-optimize + re-simulate
+        if: steps.check.outcome == 'failure'
+        run: |
+          python -m src.forecast.train
+          python -m src.optimize.run
+          python -m src.simulate.run
+
+      - name: Upload monitoring + retrain artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: monitoring-and-models
+          path: |
+            reports/monitoring_summary.json
+            reports/drift_report.html
+            models/
+            data/processed/recommendations.parquet
